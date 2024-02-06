@@ -3,10 +3,10 @@ import {TiEdit} from 'react-icons/ti'
 
 import './index.css'
 
-const CommentItem = props => {
-  const {commentDetails, editList} = props
+const ListItems = props => {
+  const {listDetails, editList, deleteList} = props
 
-  const {id, name, comment, isLiked, initialClassName, date} = commentDetails
+  const {id, name, list, isLiked, initialClassName, date} = listDetails
   const initial = name ? name[0].toUpperCase() : ''
   const likeTextClassName = isLiked ? 'button active' : 'button'
   const likeImageUrl = isLiked
@@ -19,13 +19,12 @@ const CommentItem = props => {
     toggleIsLiked(id)
   }
 
-  const onDeleteComment = () => {
-    const {deleteComment} = props
-    deleteComment(id)
+  const onDeleteList = () => {
+    deleteList(id)
   }
 
   const onEditList = () => {
-    editList(id, name, comment)
+    editList(id, name, list)
   }
 
   return (
@@ -39,7 +38,7 @@ const CommentItem = props => {
             <p className="username">{name}</p>
             <p className="time">{postedTime} ago</p>
           </div>
-          <p className="comment">{comment}</p>
+          <p className="comment">{list}</p>
         </div>
       </div>
       <div className="buttons-container">
@@ -56,7 +55,7 @@ const CommentItem = props => {
         <button
           className="button"
           type="button"
-          onClick={onDeleteComment}
+          onClick={onDeleteList}
           data-testid="delete"
         >
           <TiEdit className="edit-icon" onClick={onEditList} />
@@ -73,4 +72,4 @@ const CommentItem = props => {
   )
 }
 
-export default CommentItem
+export default ListItems

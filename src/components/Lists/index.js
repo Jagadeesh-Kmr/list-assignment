@@ -1,7 +1,7 @@
 import {Component} from 'react'
 import {v4} from 'uuid'
 
-import CommentItem from '../CommentItem'
+import ListItems from '../ListItems'
 
 import './index.css'
 
@@ -15,40 +15,40 @@ const initialContainerBackgroundClassNames = [
   'light-blue',
 ]
 
-class Comments extends Component {
+class Lists extends Component {
   state = {
     nameInput: '',
-    commentInput: '',
-    commentsList: [],
+    listInput: '',
+    listList: [],
     search: '',
     errorMsg: '',
   }
 
-  deleteComment = commentId => {
-    const {commentsList} = this.state
+  deleteList = listId => {
+    const {listList} = this.state
 
     this.setState({
-      commentsList: commentsList.filter(comment => comment.id !== commentId),
+      listList: listList.filter(list => list.id !== listId),
     })
   }
 
-  editList = (id, newName, newComment) => {
-    const {commentsList} = this.state
-    const updatedList = commentsList.filter(eachData => eachData.id !== id)
+  editList = (id, newName, newList) => {
+    const {listList} = this.state
+    const updatedList = listList.filter(eachData => eachData.id !== id)
     this.setState({
-      commentsList: updatedList,
+      listList: updatedList,
     })
     this.setState({nameInput: newName})
-    this.setState({commentInput: newComment})
+    this.setState({listInput: newList})
   }
 
   toggleIsLiked = id => {
     this.setState(prevState => ({
-      commentsList: prevState.commentsList.map(eachComment => {
-        if (id === eachComment.id) {
-          return {...eachComment, isLiked: !eachComment.isLiked}
+      listList: prevState.listList.map(eachList => {
+        if (id === eachList.id) {
+          return {...eachList, isLiked: !eachList.isLiked}
         }
-        return eachComment
+        return eachList
       }),
     }))
   }
@@ -72,26 +72,26 @@ class Comments extends Component {
     </div>
   )
 
-  renderCommentsList = () => {
-    const {commentsList, search} = this.state
-    const searchResults = commentsList.filter(eachData =>
+  renderListsList = () => {
+    const {listList, search} = this.state
+    const searchResults = listList.filter(eachData =>
       eachData.name.toLowerCase().includes(search.toLowerCase()),
     )
 
-    return searchResults.map(eachComment => (
-      <CommentItem
-        key={eachComment.id}
-        commentDetails={eachComment}
+    return searchResults.map(eachList => (
+      <ListItems
+        key={eachList.id}
+        listDetails={eachList}
         toggleIsLiked={this.toggleIsLiked}
-        deleteComment={this.deleteComment}
+        deleteList={this.deleteList}
         editList={this.editList}
       />
     ))
   }
 
-  onAddComment = event => {
+  onAddList = event => {
     event.preventDefault()
-    const {nameInput, commentInput} = this.state
+    const {nameInput, listInput} = this.state
     const initialBackgroundColorClassName = `initial-container ${
       initialContainerBackgroundClassNames[
         Math.ceil(
@@ -99,33 +99,30 @@ class Comments extends Component {
         )
       ]
     }`
-    const newComment = {
+    const newList = {
       id: v4(),
       name: nameInput,
-      comment: commentInput,
+      list: listInput,
       date: new Date(),
       isLiked: false,
       initialClassName: initialBackgroundColorClassName,
     }
-    if (nameInput.length === 0 || commentInput.length === 0) {
+    if (nameInput.length === 0 || listInput.length === 0) {
       this.setState({errorMsg: '*Enter Details'})
     } else {
       this.setState(prevState => ({
-        commentsList: [...prevState.commentsList, newComment],
+        listList: [...prevState.listList, newList],
         nameInput: '',
-        commentInput: '',
+        listInput: '',
         errorMsg: '',
       }))
-      localStorage.setItem(
-        'commentList',
-        JSON.stringify(nameInput, commentInput),
-      )
+      localStorage.setItem('listList', JSON.stringify(nameInput, listInput))
     }
   }
 
-  onChangeCommentInput = event => {
+  onChangeListInput = event => {
     this.setState({
-      commentInput: event.target.value,
+      listInput: event.target.value,
     })
   }
 
@@ -136,15 +133,15 @@ class Comments extends Component {
   }
 
   render() {
-    const {nameInput, commentInput, commentsList, errorMsg} = this.state
-    const itemName = commentsList.length === 1 ? 'ITEM' : 'ITEMS'
+    const {nameInput, listInput, listList, errorMsg} = this.state
+    const itemName = listList.length === 1 ? 'ITEM' : 'ITEMS'
     return (
       <div className="app-container">
         <div className="comments-container">
           <h1 className="app-heading">My Lists</h1>
           <p className="form-description">Create Your Lists</p>
           <div className="comments-inputs">
-            <form className="form" onSubmit={this.onAddComment}>
+            <form className="form" onSubmit={this.onAddList}>
               <input
                 type="text"
                 className="name-input"
@@ -155,8 +152,8 @@ class Comments extends Component {
               <textarea
                 placeholder="Enter items..."
                 className="comment-input"
-                value={commentInput}
-                onChange={this.onChangeCommentInput}
+                value={listInput}
+                onChange={this.onChangeListInput}
                 rows="6"
               />
               <p className="error-msg">{errorMsg}</p>
@@ -174,16 +171,16 @@ class Comments extends Component {
           <div className="searchCountContainer">
             {this.renderSearchBar()}
             <p className="heading">
-              <span className="comments-count">{commentsList.length}</span>
+              <span className="comments-count">{listList.length}</span>
               {itemName}
             </p>
           </div>
 
-          <ul className="comments-list">{this.renderCommentsList()}</ul>
+          <ul className="comments-list">{this.renderListsList()}</ul>
         </div>
       </div>
     )
   }
 }
 
-export default Comments
+export default Lists

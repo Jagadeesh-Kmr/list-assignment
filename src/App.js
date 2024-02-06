@@ -1,7 +1,7 @@
-import Comments from './components/Comments'
+import Lists from './components/Lists'
 
 import './App.css'
 
-const App = () => <Comments />
+const App = () => <Lists />
 
 export default App
